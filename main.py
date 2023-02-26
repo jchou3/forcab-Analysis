@@ -9,15 +9,27 @@ import folium
 from streamlit_folium import st_folium
 import branca.colormap as cm
 import pandas as pd
+import base64
+
+st.set_page_config(layout="wide")
 
 
-# with open('style.css') as f:
-#     st.markdown('<style>(f.read())</style>', unsafe_allow_html=True)
+with open('style.css') as f:
+    st.markdown(f'<style> {f.read()} </style>', unsafe_allow_html=True)
+
+# st.markdown(f""" 
+#     <div class='sky_phase sky_dawn'></div>
+#     <div class='sky_phase sky_noon'></div>
+#     <div class='sky_phase sky_dusk'></div>
+#     <div class='sky_phase sky_night'>
+#         <div id='sky_stars'></div>    
+#     </div>
+#         """, unsafe_allow_html=True)
 
 #To run: streamlit run main.py
 
 #reading polygon data from geospatial
-polygon = gpd.read_file(r"zones\taxi_zones.shp")
+polygon = gpd.read_file(r"zones/taxi_zones.shp")
 
 map_df = polygon
 map_df.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -40,7 +52,6 @@ demand_data = demand_data.rename(columns = { x : ("Hour " + str(x)) for x in ran
 
 df = map_df.merge(demand_data, on="OBJECTID")
 
-hour = "Hour 0"
 
 
 #header = st.container()
@@ -50,7 +61,7 @@ hour = "Hour 0"
 
 #with header:
 #    st.title("Demand Prediction Analysis")
-title_html = '<p style="font-family: Times New Roman; font-size: 44px; font-weight: bold; text-align: center;">Demand Prediction Analysis</p>'
+title_html = """<p class='floating'>Demand Prediction Analysis</p>"""
 st.markdown(title_html, unsafe_allow_html=True)
 
 
@@ -61,28 +72,6 @@ st.markdown(title_html, unsafe_allow_html=True)
 #     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 #     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 #     <div id="accordion">
-#       <div class="card">
-#         <div class="card-header" id="headingOne">
-#           <h5 class="mb-0">
-#             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-#             Collapsible Group Item #1
-#             </button>
-#           </h5>
-#         </div>
-#         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-#           <div class="card-body">
-#             Collapsible Group Item #1 content
-#           </div>
-#         </div>
-#       </div>
-#       <div class="card">
-#         <div class="card-header" id="headingTwo">
-#           <h5 class="mb-0">
-#             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-#             Collapsible Group Item #2
-#             </button>
-#           </h5>
-#         </div>
 #         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 #           <div class="card-body">
 #             Collapsible Group Item #2 content
@@ -117,11 +106,11 @@ elif (int(formatted_time[0:2]) == 0):
     formatted_time = "12:00 AM"
 
 
-time_to_int = {'12:00 AM' : "Hour 0", '1:00 AM' : "Hour 1", '2:00 AM' : "Hour 2", '3:00 AM' : "Hour 3", '4:00 AM' : "Hour 4", '5:00 AM' : "Hour 5" , '6:00 AM' : "Hour 6", '7:00 AM': "Hour 7", '8:00 AM' : "Hour 8", '9:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '1:00 PM' : "Hour 13", '2:00 PM' : "Hour 14", '3:00 PM' : "Hour 15", '4:00 PM' : "Hour 16", '5:00 PM' : "Hour 17",'6:00 PM' : "Hour 18", '7:00 PM' : "Hour 19",'8:00 PM' : "Hour 20", '9:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
+time_to_int = {'12:00 AM' : "Hour 0", '01:00 AM' : "Hour 1", '02:00 AM' : "Hour 2", '03:00 AM' : "Hour 3", '04:00 AM' : "Hour 4", '05:00 AM' : "Hour 5" , '06:00 AM' : "Hour 6", '07:00 AM': "Hour 7", '08:00 AM' : "Hour 8", '09:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '01:00 PM' : "Hour 13", '02:00 PM' : "Hour 14", '03:00 PM' : "Hour 15", '04:00 PM' : "Hour 16", '05:00 PM' : "Hour 17",'06:00 PM' : "Hour 18", '07:00 PM' : "Hour 19",'08:00 PM' : "Hour 20", '09:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
 hour = time_to_int[formatted_time]
 
 #time_options = ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00", "0:00"]
-time_options = ["12:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM", "11:00 PM"]
+time_options = ["12:00 AM","01:00 AM","02:00 AM","03:00 AM","04:00 AM","05:00 AM","06:00 AM","07:00 AM","08:00 AM","09:00 AM","10:00 AM","11:00 AM","12:00 PM","01:00 PM","02:00 PM","03:00 PM","04:00 PM","05:00 PM","06:00 PM","07:00 PM","08:00 PM","09:00 PM","10:00 PM", "11:00 PM"]
 
 
 selected_time = st.select_slider(
@@ -147,7 +136,7 @@ choro = folium.Choropleth(
 
 
 
-map = folium.Map(location=[40.7, -73.70], zoom_start=10, tiles='CartoDB positron')
+map = folium.Map(location=[40.7, -73.90], zoom_start=11, tiles='CartoDB positron')
 
 choro.geojson.add_to(map)
 choro.geojson.add_child(
@@ -158,7 +147,7 @@ choro.geojson.add_child(
     )
 )
 
-st_map = st_folium(map, width=1000, height=500)
+st_map = st_folium(map, width=1500, height=400)
 
 
 

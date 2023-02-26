@@ -1,16 +1,60 @@
-/* input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
+/* <a href="https://imgbb.com/"><img src="https://i.ibb.co/Qkph9dV/Tiny-taxi.png"  */
+
+/* -webkit-appearance: none;
     border: none;
     height: 32px;
     width: 32px;
     background: goldenrod;
     background: url('http://iconizer.net/files/Duesseldorf/orig/heart.png') no-repeat;
     margin-top: -15px;
-    border-radius: 0 !important;
-}
-input[type=range]+.thumb {
-    background-color: #FF8A80 !important;
-}
-input[type=range]+.thumb.active{
-  top: -35px !important;
-} */
+    border-radius: 0 !important; */
+@import url("https://fonts.googleapis.com/css?family=Varela Round");
+
+    .block-container.css-k1ih3n.egzxvld4 {
+        width: 100%;
+        padding: 3rem 1rem 10rem;
+        min-width: auto;
+        max-width: initial;
+    }
+
+    .css-q02ux.e88czh83 {
+        -webkit-appearance: none;
+        border: none;
+        height: 32px;
+        width: 32px;
+        background: goldenrod;
+        background: url("https://i.ibb.co/Qkph9dV/Tiny-taxi.png") no-repeat;
+        margin-top: -15;
+    }
+
+    .css-q02ux:focus {
+        outline: none;
+    }
+
+    .css-1inwz65 {
+        color: rgb(224, 176, 255);
+    }
+
+    p {
+        color: rgb(224, 176, 255);
+        font-family: "Varela Round"; 
+        font-size: 44px; 
+        font-weight: bold; 
+        text-align: center
+    }
+
+
+    .floating { 
+        animation-name: floating;
+        animation-duration: 4s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        margin-left: 30px;
+        margin-top: 5px;
+    }
+     
+    @keyframes floating {
+        0% { transform: translate(0,  0px); }
+        50%  { transform: translate(0, 15px); }
+        100%   { transform: translate(0, -0px); }   
+    }

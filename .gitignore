@@ -1,6 +1,9 @@
 # Ignoring the data
 data/
 
+# Ignoring Catboost stuff
+catboost_info/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

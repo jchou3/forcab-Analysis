@@ -8,7 +8,7 @@
         max-width: initial;
     }
 
-    .css-q02ux.e88czh83 {
+    .css-sdcfw1.e88czh83 {
         -webkit-appearance: none;
         border: none;
         height: 32px;
@@ -17,30 +17,77 @@
         margin-top: -15;
     }
 
+    .balloon {
+        width: 56px;
+        position: fixed;
+        height: auto;
+        right: 24px;
+        top: 16px;
+        display: block;
+        animation-name: floating;
+        animation-duration: 4s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+    }
+    
+    .cloud {
+        width: 324px;
+        position: fixed;
+        height: auto;
+        left: -130px;
+        top: 26px;
+        display: block;
+        opacity: .4;
+        animation-name: drift;
+        animation-duration: 23s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
 
-    .css-q02ux:focus {
+    .star {
+        height:3px;
+        width: 3px;
+        background: white;
+        position: absolute;
+    }
+
+    @keyframes drift {
+        0% { transform: translate(-10vw, 0px)}
+        25% { transform: translate(20vw, -28px)}
+        50% { transform: translate(50vw, -3px)}
+        70% { transform: translate(74vw, -36px)}
+        100% { transform: translate(110vw, 4px)}
+    }
+
+    .css-sdcfw1:focus {
         outline: none;
         box-shadow: none
     }
 
     .css-1inwz65 {
-        color: rgb(178, 93, 235);
+        color: #FD754D;
     }
 
     p {
-        color: rgb(178, 93, 235);
+        color: #FD754D;
         font-family: "Varela Round"; 
         font-size: 48px; 
         font-weight: bold; 
-        text-align: center
+        text-align: center;
+
+        text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000; 
     }
 
 
     .floating { 
-        animation-name: floating;
+        /* animation-name: floating;
         animation-duration: 4s;
         animation-iteration-count: infinite;
-        animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out; */
         margin-left: 30px;
         margin-top: 5px;
     }
@@ -55,7 +102,66 @@
         display: none
     }
 
-    [data-testid="stAppViewContainer"] {
-        transition: color 0.5s
-    }
     
+    .sky {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+/* 
+    @keyframes change {
+
+        40% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes leave {
+        40% {
+            opacity: 0;
+        }
+    } */
+
+    /* @keyframes stars_blink {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.2;
+        }
+    } */
+
+    #sky_dawn {
+        background: linear-gradient(
+            0deg,
+            rgba(254, 215, 102, 1) 0%,
+            rgba(205, 237, 246, 1) 100%
+        );
+    }
+
+    #sky_noon {
+        background: linear-gradient(
+            0deg,
+            rgba(205, 237, 246, 1) 0%,
+            rgb(57, 175, 226) 100%
+        );
+    }
+
+    #sky_dusk {
+        background: linear-gradient(
+            0deg,
+            rgba(255, 32, 110, 1) 0%,
+            rgba(10, 0, 94, 1) 100%
+        );
+    }
+
+    #sky_night {
+        background: linear-gradient(
+                        0deg,
+                        rgb(1, 0, 10) 0%,
+                        rgb(15, 6, 100) 100%
+	                );
+    }

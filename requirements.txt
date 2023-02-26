@@ -1,3 +1,5 @@
-steanlit=1.19
+steanlit==1.19
 geopandas
-streamlit_folium=0.6.13
+streamlit_folium==0.6.13
+plotly
+folium

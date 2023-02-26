@@ -18,7 +18,7 @@ with open('style.css') as f:
     st.markdown(f'<style> {f.read()} </style>', unsafe_allow_html=True)
 
 
-
+# Stars added
 st.markdown(""" 
     <div class = 'sky' id='sky_dawn'></div>
     <div class = 'sky' id='sky_noon'></div>
@@ -89,13 +89,43 @@ def filter_day(prediction, day):
 
 #with header:
 #    st.title("Demand Prediction Analysis")
+
+
+
+
 title_html = """<p class='floating'>forecab Analysis: </p>"""
 st.markdown(title_html, unsafe_allow_html=True)
 
-p_day = st.date_input(label = "date", label_visibility = "collapsed", 
-              min_value = datetime(2023, 6, 1), 
-              max_value = datetime(2023, 6, 30),
-              value = datetime(2023, 6, 1))
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+
+with col1:
+    st.write("")
+
+with col2:
+    st.write("")
+
+with col3:
+    st.write("")
+
+with col4:
+   # dt, padding = st.columns([20,23])
+    p_day = st.date_input(label = "date", label_visibility = "collapsed", 
+                min_value = datetime(2023, 6, 1), 
+                max_value = datetime(2023, 6, 30),
+                value = datetime(2023, 6, 1))
+    #padding.write("")
+
+with col5:
+    st.write("")
+
+with col6:
+    st.write("")
+    
+              
+#p_day = st.date_input(label = "date", label_visibility = "collapsed", 
+#             min_value = datetime(2023, 6, 1), 
+#             max_value = datetime(2023, 6, 30),
+#              value = datetime(2023, 6, 1))
 
 df = filter_day(pre_demand_data, int(p_day.strftime("%d")))
 
@@ -254,8 +284,8 @@ else:
 
 st.markdown(bg, unsafe_allow_html=True)
 
-geo[0] = ""
-geo[1] = "df.geojson"
+#geo[0] = ""
+#geo[1] = "df.geojson"
 
 choro = folium.Choropleth(
     geo_data = "df.geojson",

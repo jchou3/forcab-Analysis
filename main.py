@@ -17,7 +17,7 @@ import pandas as pd
 #To run: streamlit run main.py
 
 #reading polygon data from geospatial
-polygon = gpd.read_file(r"zones\taxi_zones.shp")
+polygon = gpd.read_file(r"zones/taxi_zones.shp")
 
 map_df = polygon
 map_df.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)

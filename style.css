@@ -1,5 +1,5 @@
 
-@import url("https://fonts.googleapis.com/css?family=Varela Round");
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
 
     .block-container.css-k1ih3n.egzxvld4 {
         width: 100%;
@@ -29,7 +29,8 @@
 
     p {
         color: rgb(178, 93, 235);
-        font-family: "Varela Round"; 
+        /* font-family: myFirstFont; */
+        font-family: 'Work Sans', sans-serif;
         font-size: 48px; 
         font-weight: bold; 
         text-align: center

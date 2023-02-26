@@ -17,12 +17,12 @@ st.set_page_config(layout="wide")
 with open('style.css') as f:
     st.markdown(f'<style> {f.read()} </style>', unsafe_allow_html=True)
 
-# st.markdown(f""" 
-#     <div class='sky_phase sky_dawn'></div>
-#     <div class='sky_phase sky_noon'></div>
-#     <div class='sky_phase sky_dusk'></div>
-#     <div class='sky_phase sky_night'>
-#         <div id='sky_stars'></div>    
+# st.markdown(""" 
+#     <div class = 'sky' id='sky_dawn'></div>
+#     <div class = 'sky' id='sky_noon'></div>
+#     <div class = 'sky' id='sky_dusk'></div>
+#     <div class = 'sky' id='sky_night'>
+#         <div class = 'sky' id='sky_stars'></div>    
 #     </div>
 #         """, unsafe_allow_html=True)
 
@@ -121,6 +121,63 @@ selected_time = st.select_slider(
 
 
 hour = time_to_int[selected_time]
+
+night = """<style>
+                [data-testid="stAppViewContainer"] {
+                    background: linear-gradient(
+                        0deg,
+                        rgb(1, 0, 10) 0%,
+                        rgb(15, 6, 100) 100%
+	                );
+                }</style>
+            """
+
+dawn = """<style>
+                [data-testid="stAppViewContainer"] {
+                    background: linear-gradient(
+                        0deg,
+                        rgba(254, 215, 102, 1) 0%,
+                        rgba(205, 237, 246, 1) 100%
+	                );
+                }</style>
+            """
+
+noon = """<style>
+                [data-testid="stAppViewContainer"] {
+                    background: linear-gradient(
+                        0deg,
+                        rgba(205, 237, 246, 1) 0%,
+                        rgb(57, 175, 226) 100%
+                    );
+                }</style>
+            """
+
+dusk = """<style>
+                [data-testid="stAppViewContainer"] {
+                    background: linear-gradient(
+                        0deg,
+                        rgba(255, 32, 110, 1) 0%,
+                        rgba(10, 0, 94, 1) 100%
+                    );
+                }
+        </style>
+            """
+
+nighttime = ['Hour 0', 'Hour 1', 'Hour 2', 'Hour 3', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour 23'];
+dawntime = ['Hour 4', 'Hour 5', 'Hour 6'];
+daytime = ['Hour 7', 'Hour 8', 'Hour 9', 'Hour 10', 'Hour 11', 'Hour 12', 'Hour 13', 'Hour 14', 'Hour 15', 'Hour 16'];
+dusktime = ['Hour 17', 'Hour 18', 'Hour 19']
+
+if (hour in nighttime):
+    bg = night
+elif (hour in daytime):
+    bg = noon  
+elif (hour in dawntime):
+    bg = dawn
+else:
+    bg = dusk
+
+st.markdown(bg, unsafe_allow_html=True)
 
 
 choro = folium.Choropleth(

@@ -65,24 +65,6 @@ title_html = """<p class='floating'>Demand Prediction Analysis</p>"""
 st.markdown(title_html, unsafe_allow_html=True)
 
 
-#Integrating HTML & CSS
-
-# com.html("""
-#     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-#     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-#     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-#     <div id="accordion">
-#         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-#           <div class="card-body">
-#             Collapsible Group Item #2 content
-#           </div>
-#         </div>
-#       </div>
-#     </div>
-#     """,
-#     height=600)
-
-
 
 # Define start and end times
 #start_time = datetime(2023, 1, 1, 0, 0, 0)
@@ -121,6 +103,10 @@ selected_time = st.select_slider(
 
 
 hour = time_to_int[selected_time]
+
+
+#If you want to add more in-between gradients, just follow this format
+#If we have extra time: add stars to the 'nighttime', add clouds to the sky
 
 night = """<style>
                 [data-testid="stAppViewContainer"] {

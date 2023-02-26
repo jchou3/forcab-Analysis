@@ -60,13 +60,24 @@ map_df.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 map_df = map_df.drop(columns=['Shape_Leng', 'Shape_Area', 'LocationID'])
 
 #reading demand data from csv
-pre_demand_data = pd.read_csv("transformed_preliminary_data.csv")
-
+pre_demand_data = pd.read_csv("final_predictions.csv")
+pre_demand_data = pre_demand_data.drop(columns=['Total Demand'])
+pre_demand_data = pre_demand_data.rename(columns = {'0' : 'Total Demand'})
 pre_demand_data = pre_demand_data.rename(columns={'Zone' : 'OBJECTID'})
 
+# geojson file names for each day
+geos = [""]
+for i in range(1, 31):
+    name = "geo/day" + str(i) + ".geojson"
+    geos.append(name)
+
+
+
+
 def filter_day(prediction, day):
-    demand_data = prediction.loc[pre_demand_data['Day'] == 1]
+    demand_data = prediction.loc[pre_demand_data['Day'] == day]
     demand_data = demand_data.drop(columns=['Month', 'Day', 'Year'])
+    # demand_data['Total Demand'] = demand_data['Total Demand'].fillna(0)
     demand_data = demand_data.pivot(index = 'OBJECTID', columns='Hour', values = 'Total Demand')
     demand_data = demand_data.drop(columns = [24])
     demand_data.reset_index(inplace=True)
@@ -96,8 +107,8 @@ p_day = st.date_input(label = "date", label_visibility = "collapsed",
               min_value = datetime(2023, 6, 1), 
               max_value = datetime(2023, 6, 30),
               value = datetime(2023, 6, 1))
-
-df = filter_day(pre_demand_data, int(p_day.strftime("%d")))
+day = int(p_day.strftime("%d"))
+df = filter_day(pre_demand_data, day)
 
 
 # Define start and end times
@@ -254,11 +265,9 @@ else:
 
 st.markdown(bg, unsafe_allow_html=True)
 
-geo[0] = ""
-geo[1] = "df.geojson"
 
 choro = folium.Choropleth(
-    geo_data = "df.geojson",
+    geo_data = geos[day],
     data = df, #we can change this to a list to show depending on hour
     columns = ['OBJECTID', hour],
     key_on='feature.properties.OBJECTID',

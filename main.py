@@ -28,7 +28,6 @@ else:
 formatted_time = rounded_time.strftime("%H:%M %p")
 
 if(int(formatted_time[0:2]) > 12):
-    print(int(formatted_time[0:2]))
     current_num = int(formatted_time[0:2]) - 12
     formatted_time = str(current_num) + formatted_time[2:]
 elif (int(formatted_time[0:2]) == 0):

@@ -139,5 +139,6 @@ predictions = catboost_regressor.predict(features)
 
 # Appending the predictions to the preliminary dataset
 final_data = pd.read_csv('data/transformed_preliminary_data.csv')
+final_data.drop(final_data[final_data['Hour'] == 24].index,inplace=True)
 final_data = pd.concat((final_data,pd.Series(predictions)),axis=1)
 final_data.to_csv('final_predictions.csv',index=False)

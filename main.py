@@ -5,8 +5,40 @@ import json
 import geopandas as gpd
 import pyproj
 import plotly.graph_objs as go
+import folium
+from streamlit_folium import st_folium
+import branca.colormap as cm
+import pandas as pd
+
 
 #To run: streamlit run main.py
+
+#reading polygon data from geospatial
+polygon = gpd.read_file(r"zones\taxi_zones.shp")
+
+map_df = polygon
+map_df.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+
+map_df = map_df.drop(columns=['Shape_Leng', 'Shape_Area', 'LocationID'])
+
+#reading demand data from csv
+demand_data = pd.read_csv("transformed_preliminary_data.csv")
+
+demand_data = demand_data.rename(columns={'Zone' : 'OBJECTID'})
+demand_data = demand_data.loc[demand_data['Day'] == 1]
+demand_data = demand_data.drop(columns=['Month', 'Day', 'Year'])
+
+demand_data = demand_data.pivot(index = 'OBJECTID', columns='Hour', values = 'Total Demand')
+demand_data = demand_data.drop(columns = [24])
+demand_data.reset_index(inplace=True)
+demand_data = demand_data.rename(columns = { x : ("Hour " + str(x)) for x in range(24)})
+
+# demand_data = demand_data.rename(columns = {'index':'OBJECTID'})
+
+df = map_df.merge(demand_data, on="OBJECTID")
+
+hour = "Hour 0"
+
 
 #header = st.container()
 # datatset = st.container()
@@ -66,7 +98,6 @@ elif current_time.minute >= 30:
 else:
     rounded_time = current_time - timedelta(minutes=current_time.minute)
 
-    
 
 formatted_time = rounded_time.strftime("%H:%M %p")
 
@@ -76,6 +107,35 @@ if(int(formatted_time[0:2]) > 12):
 elif (int(formatted_time[0:2]) == 0):
     formatted_time = "12:00 AM"
 
+
+time_to_int = {'12:00 AM' : "Hour 0", '1:00 AM' : "Hour 1", '2:00 AM' : "Hour 2", '3:00 AM' : "Hour 3", '4:00 AM' : "Hour 4", '5:00 AM' : "Hour 5" , '6:00 AM' : "Hour 6", '7:00 AM': "Hour 7", '8:00 AM' : "Hour 8", '9:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '1:00 PM' : "Hour 13", '2:00 PM' : "Hour 14", '3:00 PM' : "Hour 15", '4:00 PM' : "Hour 16", '5:00 PM' : "Hour 17",'6:00 PM' : "Hour 18", '7:00 PM' : "Hour 19",'8:00 PM' : "Hour 20", '9:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
+hour = time_to_int[formatted_time]
+
+choro = folium.Choropleth(
+    geo_data = "df.geojson",
+    data = df, #we can change this to a list to show depending on hour
+    columns = ['OBJECTID', hour],
+    key_on='feature.properties.OBJECTID',
+    line_opacity=0.2,
+    fill_opacity = 0.7,
+    fill_color = 'BuPu',
+    highlight = True
+)
+
+
+
+map = folium.Map(location=[40.7, -73.70], zoom_start=10, tiles='CartoDB positron')
+
+choro.geojson.add_to(map)
+choro.geojson.add_child(
+    folium.features.GeoJsonTooltip(
+        fields=['zone', hour],
+        aliases=['Zone: ','Expected Demand: '],
+        style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;") 
+    )
+)
+
+st_map = st_folium(map, width=1000, height=500)
 
 #time_options = ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00", "0:00"]
 time_options = ["12:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM", "11:00 PM"]
@@ -88,9 +148,8 @@ selected_time = st.select_slider(
 )
 
 
-time_to_int = {'12:00 AM' : "Hour 0", '1:00 AM' : "Hour 1", '2:00 AM' : "Hour 2", '3:00 AM' : "Hour 3", '4:00 AM' : "Hour 4", '5:00 AM' : "Hour 5" , '6:00 AM' : "Hour 6", '7:00 AM': "Hour 7", '8:00 AM' : "Hour 8", '9:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '1:00 PM' : "Hour 13", '2:00 PM' : "Hour 14", '3:00 PM' : "Hour 15", '4:00 PM' : "Hour 16", '5:00 PM' : "Hour 17",'6:00 PM' : "Hour 18", '7:00 PM' : "Hour 19",'8:00 PM' : "Hour 20", '9:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
 hour = time_to_int[selected_time]
-st.write(hour)
+
 
 
 

@@ -1,8 +1,8 @@
 [theme] # You have to add this line
 
-primaryColor = '#E0B0FF' # Mauve
+primaryColor = '#FD754D' # Mauve
 
-textColor = '#FFD3C0' 
+textColor = '#B25DEB' 
 
 backgroundColor = '#00325B' # Dark Blue
 

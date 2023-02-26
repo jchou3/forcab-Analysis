@@ -17,14 +17,37 @@ st.set_page_config(layout="wide")
 with open('style.css') as f:
     st.markdown(f'<style> {f.read()} </style>', unsafe_allow_html=True)
 
-# st.markdown(""" 
-#     <div class = 'sky' id='sky_dawn'></div>
-#     <div class = 'sky' id='sky_noon'></div>
-#     <div class = 'sky' id='sky_dusk'></div>
-#     <div class = 'sky' id='sky_night'>
-#         <div class = 'sky' id='sky_stars'></div>    
-#     </div>
-#         """, unsafe_allow_html=True)
+
+
+st.markdown(""" 
+    <div class = 'sky' id='sky_dawn'></div>
+    <div class = 'sky' id='sky_noon'></div>
+    <div class = 'sky' id='sky_dusk'></div>
+    <div class = 'sky' id='sky_night'></div>
+    <div class = 'sky' id='sky_stars'>
+        <div class = 'star' style='left: 7vw; top: 64vh;'></div>
+        <div class = 'star' style='left: 93vw; top: 42vh;'></div>
+        <div class = 'star' style='left: 90vw; top: 38vh;'></div>
+        <div class = 'star' style='left: 6vw; top: 16vh;'></div>
+        <div class = 'star' style='left: 5vw; top: 21vh;'></div>
+        <div class = 'star' style='left: 46vw; top: 80vh;'></div>
+        <div class = 'star' style='left: 18vw; top: 40vh;'></div>
+        <div class = 'star' style='left: 31vw; top: 3vh;'></div>
+        <div class = 'star' style='left: 46vw; top: 10vh;'></div>
+        <div class = 'star' style='left: 55vw; top: 19vh;'></div>
+        <div class = 'star' style='left: 89vw; top: 5vh;'></div>
+        <div class = 'star' style='left: 81vw; top: 33vh;'></div>
+        <div class = 'star' style='left: 86vw; top: 28vh;'></div>
+        <div class = 'star' style='left: 92vw; top: 78vh;'></div>
+        <div class = 'star' style='left: 60vw; top: 9vh;'></div>
+        <div class = 'star' style='left: 35vw; top: 19vh;'></div>
+        <div class = 'star' style='left: 36vw; top: 74vh;'></div>
+        <div class = 'star' style='left: 31vw; top: 34vh;'></div>
+    </div>  
+    <img src="https://i.ibb.co/z6CyNCn/Untitled.png" class="balloon"></div>
+    <img src="https://i.ibb.co/gMD1qVj/cute-cloud.png" class="cloud"></div>
+        """, unsafe_allow_html=True)
+
 
 #To run: streamlit run main.py
 
@@ -37,20 +60,25 @@ map_df.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 map_df = map_df.drop(columns=['Shape_Leng', 'Shape_Area', 'LocationID'])
 
 #reading demand data from csv
-demand_data = pd.read_csv("transformed_preliminary_data.csv")
+pre_demand_data = pd.read_csv("transformed_preliminary_data.csv")
 
-demand_data = demand_data.rename(columns={'Zone' : 'OBJECTID'})
-demand_data = demand_data.loc[demand_data['Day'] == 1]
-demand_data = demand_data.drop(columns=['Month', 'Day', 'Year'])
+pre_demand_data = pre_demand_data.rename(columns={'Zone' : 'OBJECTID'})
 
-demand_data = demand_data.pivot(index = 'OBJECTID', columns='Hour', values = 'Total Demand')
-demand_data = demand_data.drop(columns = [24])
-demand_data.reset_index(inplace=True)
-demand_data = demand_data.rename(columns = { x : ("Hour " + str(x)) for x in range(24)})
+def filter_day(prediction, day):
+    demand_data = prediction.loc[pre_demand_data['Day'] == 1]
+    demand_data = demand_data.drop(columns=['Month', 'Day', 'Year'])
+    demand_data = demand_data.pivot(index = 'OBJECTID', columns='Hour', values = 'Total Demand')
+    demand_data = demand_data.drop(columns = [24])
+    demand_data.reset_index(inplace=True)
+    demand_data = demand_data.rename(columns = { x : ("Hour " + str(x)) for x in range(24)})
+    df = map_df.merge(demand_data, on="OBJECTID")
+    return df
+
+
 
 # demand_data = demand_data.rename(columns = {'index':'OBJECTID'})
 
-df = map_df.merge(demand_data, on="OBJECTID")
+
 
 
 
@@ -61,9 +89,15 @@ df = map_df.merge(demand_data, on="OBJECTID")
 
 #with header:
 #    st.title("Demand Prediction Analysis")
-title_html = """<p class='floating'>Demand Prediction Analysis</p>"""
+title_html = """<p class='floating'>forecab Analysis: </p>"""
 st.markdown(title_html, unsafe_allow_html=True)
 
+p_day = st.date_input(label = "date", label_visibility = "collapsed", 
+              min_value = datetime(2023, 6, 1), 
+              max_value = datetime(2023, 6, 30),
+              value = datetime(2023, 6, 1))
+
+df = filter_day(pre_demand_data, int(p_day.strftime("%d")))
 
 
 # Define start and end times
@@ -88,11 +122,11 @@ elif (int(formatted_time[0:2]) == 0):
     formatted_time = "12:00 AM"
 
 
-time_to_int = {'12:00 AM' : "Hour 0", '01:00 AM' : "Hour 1", '02:00 AM' : "Hour 2", '03:00 AM' : "Hour 3", '04:00 AM' : "Hour 4", '05:00 AM' : "Hour 5" , '06:00 AM' : "Hour 6", '07:00 AM': "Hour 7", '08:00 AM' : "Hour 8", '09:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '01:00 PM' : "Hour 13", '02:00 PM' : "Hour 14", '03:00 PM' : "Hour 15", '04:00 PM' : "Hour 16", '05:00 PM' : "Hour 17",'06:00 PM' : "Hour 18", '07:00 PM' : "Hour 19",'08:00 PM' : "Hour 20", '09:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
+time_to_int = {'12:00 AM' : "Hour 0", '01:00 AM' : "Hour 1", '02:00 AM' : "Hour 2", '03:00 AM' : "Hour 3", '04:00 AM' : "Hour 4", '05:00 AM' : "Hour 5" , '06:00 AM' : "Hour 6", '07:00 AM': "Hour 7", '08:00 AM' : "Hour 8", '09:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '1:00 PM' : "Hour 13", '2:00 PM' : "Hour 14", '3:00 PM' : "Hour 15", '4:00 PM' : "Hour 16", '5:00 PM' : "Hour 17",'6:00 PM' : "Hour 18", '7:00 PM' : "Hour 19",'8:00 PM' : "Hour 20", '9:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
 hour = time_to_int[formatted_time]
 
 #time_options = ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00", "0:00"]
-time_options = ["12:00 AM","01:00 AM","02:00 AM","03:00 AM","04:00 AM","05:00 AM","06:00 AM","07:00 AM","08:00 AM","09:00 AM","10:00 AM","11:00 AM","12:00 PM","01:00 PM","02:00 PM","03:00 PM","04:00 PM","05:00 PM","06:00 PM","07:00 PM","08:00 PM","09:00 PM","10:00 PM", "11:00 PM"]
+time_options = ["12:00 AM","01:00 AM","02:00 AM","03:00 AM","04:00 AM","05:00 AM","06:00 AM","07:00 AM","08:00 AM","09:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM", "11:00 PM"]
 
 
 selected_time = st.select_slider(
@@ -108,46 +142,101 @@ hour = time_to_int[selected_time]
 #If you want to add more in-between gradients, just follow this format
 #If we have extra time: add stars to the 'nighttime', add clouds to the sky
 
-night = """<style>
-                [data-testid="stAppViewContainer"] {
+
+night = """<style> #sky_night {
+    opacity: 1;
+}
+    #sky_stars{
+    opacity: 1;}
+    #sky_dusk {
+    opacity: 0;
+}        
+    #sky_noon {
+    opacity: 0
+}     
+    #sky_dawn{
+        opacity: 0;
+
+}     
+[data-testid="stAppViewContainer"] {
                     background: linear-gradient(
                         0deg,
                         rgb(1, 0, 10) 0%,
                         rgb(15, 6, 100) 100%
-	                );
-                }</style>
-            """
+	                ); 
+            </style>"""
 
-dawn = """<style>
-                [data-testid="stAppViewContainer"] {
-                    background: linear-gradient(
-                        0deg,
-                        rgba(254, 215, 102, 1) 0%,
-                        rgba(205, 237, 246, 1) 100%
-	                );
-                }</style>
-            """
+dusk = """ <style> #sky_dusk {
+    opacity: 1;}
+    #sky_stars{
+    opacity: 1;}
+ #sky_night {
+        opacity: 0;
+}        
+    #sky_noon {
+        opacity: 0;
+}     
+    #sky_dawn{
+        opacity: 0;
 
-noon = """<style>
-                [data-testid="stAppViewContainer"] {
+}     
+[data-testid="stAppViewContainer"] {
+                     background: linear-gradient(
+                         0deg,
+                        rgba(255, 32, 110, 1) 0%,
+                         rgba(10, 0, 94, 1) 100%
+                     );
+                 }
+}</style>"""
+
+noon = """ <style>#sky_noon {
+    opacity: 1;}
+    #sky_stars{
+    opacity: 0;}
+ #sky_dusk {
+        opacity: 0;
+
+}        
+    #sky_night {
+        opacity: 0;
+
+}     
+    #sky_dawn{
+        opacity: 0;
+
+}     
+[data-testid="stAppViewContainer"] {
                     background: linear-gradient(
                         0deg,
                         rgba(205, 237, 246, 1) 0%,
                         rgb(57, 175, 226) 100%
                     );
-                }</style>
-            """
 
-dusk = """<style>
-                [data-testid="stAppViewContainer"] {
-                    background: linear-gradient(
-                        0deg,
-                        rgba(255, 32, 110, 1) 0%,
-                        rgba(10, 0, 94, 1) 100%
-                    );
-                }
-        </style>
-            """
+}</style>"""
+
+dawn = """ <style>#sky_dawn {
+    opacity: 1;}
+    #sky_stars{
+    opacity: 0;}
+ #sky_dusk {
+        opacity: 0;
+
+}        
+    #sky_noon {
+        opacity: 0;
+
+}     
+    #sky_night{
+        opacity: 0;
+
+}     
+[data-testid="stAppViewContainer"] {
+                     background: linear-gradient(
+                         0deg,
+                         rgba(254, 215, 102, 1) 0%,
+                         rgba(205, 237, 246, 1) 100%
+ 	                );
+}</style>"""
 
 nighttime = ['Hour 0', 'Hour 1', 'Hour 2', 'Hour 3', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour 23']
 dawntime = ['Hour 4', 'Hour 5', 'Hour 6']
@@ -165,6 +254,8 @@ else:
 
 st.markdown(bg, unsafe_allow_html=True)
 
+geo[0] = ""
+geo[1] = "df.geojson"
 
 choro = folium.Choropleth(
     geo_data = "df.geojson",
@@ -173,13 +264,13 @@ choro = folium.Choropleth(
     key_on='feature.properties.OBJECTID',
     line_opacity=0.2,
     fill_opacity = 0.7,
-    fill_color = 'BuPu',
+    fill_color = 'YlOrRd',
     highlight = True
 )
 
 
 
-map = folium.Map(location=[40.7, -73.90], zoom_start=11, tiles='CartoDB positron')
+map = folium.Map(location=[40.7, -73.850], zoom_start=11, min_zoom= 9, tiles='CartoDB positron')
 
 choro.geojson.add_to(map)
 choro.geojson.add_child(
@@ -189,6 +280,7 @@ choro.geojson.add_child(
         style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;") 
     )
 )
+
 
 st_map = st_folium(map, width=1500, height=400)
 

@@ -62,7 +62,7 @@ map_df = map_df.drop(columns=['Shape_Leng', 'Shape_Area', 'LocationID'])
 #reading demand data from csv
 pre_demand_data = pd.read_csv("final_predictions.csv")
 pre_demand_data = pre_demand_data.drop(columns=['Total Demand'])
-pre_demand_data = pre_demand_data.rename(columns = {'0' : 'Total Demand'})
+pre_demand_data = pre_demand_data.rename(columns = {'Predictions' : 'Total Demand'})
 pre_demand_data = pre_demand_data.rename(columns={'Zone' : 'OBJECTID'})
 
 # geojson file names for each day
@@ -79,7 +79,7 @@ def filter_day(prediction, day):
     demand_data = demand_data.drop(columns=['Month', 'Day', 'Year'])
     # demand_data['Total Demand'] = demand_data['Total Demand'].fillna(0)
     demand_data = demand_data.pivot(index = 'OBJECTID', columns='Hour', values = 'Total Demand')
-    demand_data = demand_data.drop(columns = [24])
+    # demand_data = demand_data.drop(columns = [24])
     demand_data.reset_index(inplace=True)
     demand_data = demand_data.rename(columns = { x : ("Hour " + str(x)) for x in range(24)})
     df = map_df.merge(demand_data, on="OBJECTID")

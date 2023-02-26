@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as com
 from datetime import datetime, timedelta
 
 #header = st.container()
@@ -8,9 +9,45 @@ from datetime import datetime, timedelta
 
 #with header:
 #    st.title("Demand Prediction Analysis")
+title_html = '<p style="font-family: Times New Roman; font-size: 44px; font-weight: bold; text-align: center;">Demand Prediction Analysis</p>'
+st.markdown(title_html, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; color: grey;'>Demand Prediction Analysis</h1>", unsafe_allow_html=True)
-
+com.html("""
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <div id="accordion">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Collapsible Group Item #1
+            </button>
+          </h5>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body">
+            Collapsible Group Item #1 content
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h5 class="mb-0">
+            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Collapsible Group Item #2
+            </button>
+          </h5>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body">
+            Collapsible Group Item #2 content
+          </div>
+        </div>
+      </div>
+    </div>
+    """,
+    height=600,);
 # Define start and end times
 #start_time = datetime(2023, 1, 1, 0, 0, 0)
 #end_time = datetime(2023, 1, 2, 0, 0, 0)
@@ -39,12 +76,17 @@ time_options = ["12:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:
 
 
 selected_time = st.select_slider(
-    "Time:",
+    " ",
     value=formatted_time,
     options=time_options,
 )
 
-# Display selected time
-st.write("Selected time:", selected_time)
+
+time_to_int = {'12:00 AM' : "Hour 0", '1:00 AM' : "Hour 1", '2:00 AM' : "Hour 2", '3:00 AM' : "Hour 3", '4:00 AM' : "Hour 4", '5:00 AM' : "Hour 5" , '6:00 AM' : "Hour 6", '7:00 AM': "Hour 7", '8:00 AM' : "Hour 8", '9:00 AM' : "Hour 9", '10:00 AM' : "Hour 10", '11:00 AM' : "Hour 11", '12:00 PM' : "Hour 12", '1:00 PM' : "Hour 13", '2:00 PM' : "Hour 14", '3:00 PM' : "Hour 15", '4:00 PM' : "Hour 16", '5:00 PM' : "Hour 17",'6:00 PM' : "Hour 18", '7:00 PM' : "Hour 19",'8:00 PM' : "Hour 20", '9:00 PM' : "Hour 21", '10:00 PM' : "Hour 22", '11:00 PM' : "Hour 23"}
+hour = time_to_int[selected_time]
+st.write(hour)
+
+
+
 
 

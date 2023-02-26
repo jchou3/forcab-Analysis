@@ -93,7 +93,7 @@ class DataBuilder():
 
             # Creating the dictionary for the day
             day_demand_dict = {} # (hour,demand)
-            for hour in range(0,25):
+            for hour in range(0,24):
                 day_demand_dict[hour] = len(day_demand_df[day_demand_df['Hour'] == hour])
             
             # Putting the day demand data into the dictionary
@@ -127,7 +127,7 @@ class DataBuilder():
             examples = [] # a matrix of the examples
 
             for day in range(1,self.max_days+1):
-                for hour in range(0,25):
+                for hour in range(0,24):
                     example = [zone,self.month,day,'2022',hour,demand[day][hour]]
                     examples.append(example)
 
